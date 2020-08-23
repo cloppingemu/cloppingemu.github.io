@@ -1,0 +1,371 @@
+<html>
+<head>
+  <title>Himanshu Soni - Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <style>
+    tr.expandTable>td{
+      padding-top: 1pt;
+      padding-bottom: 5pt;
+    }
+    ul.skillsList>li{
+      margin: 10 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="app">
+  <v-app :style="{ backgroundColor: color}">
+  <v-content class="mt-5">
+  
+  
+  <v-container>
+  <v-layout justify-center v-if="!showing_voight_kampff">
+  <v-flex xs12 sm11 md8 >
+    <v-toolbar flat tile dark>
+      <h1>Himanshu Soni</h1> <v-spacer></v-spacer>
+      <v-btn small fab text v-if="tab!==0" class="hidden-xs-only" href="https://www.linkedin.com/in/himanshu-soni-b52857138/"><v-icon> mdi-linkedin </v-icon></v-btn>
+      <v-btn small fab text v-if="tab!==0" class="hidden-xs-only" href="https://github.com/cloppingemu"><v-icon> mdi-github </v-icon></v-btn>
+      <v-menu
+        v-if="tab!==0"
+        :close-on-content-click="false"
+        v-model="email_header"
+        :disabled="!email_fetched"
+      >
+        <template v-slot:activator="{ on:menu }">
+          <v-btn small fab text class="hidden-xs-only" v-on="{...menu}" @click="start_email_fetch()" id="profile_email_fab" :loading="loading_email">
+            <v-icon> {{email_icon}} </v-icon>
+          </v-btn>
+        </template>
+        <v-card dark>
+          <v-card-text>
+            <v-text-field
+              readonly rounded
+              id="copier" v-model="email_address"
+              @click="copy_email_address(false)"
+            >
+              <template v-slot:append>
+                <v-tooltip bottom :close-delay="email_clipboard_close_delay">
+                  <template v-slot:activator="{ on }">
+                      <v-icon v-on="on" @click="copy_email_address(true)">
+                        {{ copy_icon }}
+                      </v-icon>
+                  </template>
+                  <span>{{ copy_tooltip }}</span>
+                </v-tooltip>
+              </template>
+            </v-text-field>
+          </v-card-text>
+        </v-card>
+      </v-menu>
+    </v-toolbar>
+  
+    <v-tabs show-arrows grow v-model="tab">
+      <v-tab>Profile</v-tab>
+      <v-tab>Projects</v-tab>
+      <v-tab>Former Roles</v-tab>
+      <v-tab>Skills</v-tab>
+    </v-tabs>
+  
+    <v-tabs-items v-model="tab">
+      <v-tab-item>
+        <v-card flat tile>
+          <v-card-text style="color:#272727">
+            <p>
+
+              I have recently finished my undergraduate study at the Australian National University. I have achieved an overall GPA of 6.429 out of 7 --- high-distinction and distinction averages in Engineering and Actuarial Studies programs respectively. I formally graduated in July 2020.
+
+            </p>
+            <p>
+              From my studies and former employments, I have a background in Digital Signal Processing and Data Analysis. I have also taught myself web development with Vue.js and used it for various personal projects.
+            </p>
+            <!-- <p> <span> xs </span><span class="hidden-xs-only"> sm </span><span class="hidden-sm-and-down">md</span> <span class="hidden-md-and-down"> lg </span> </p> -->
+          </v-card-text>
+          <v-container><v-flex xs12 sm5 md4><v-layout justify-space-around>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn fab elevation="2" class="primary" v-on="on" href="https://www.linkedin.com/in/himanshu-soni-b52857138/">
+                  <v-icon> mdi-linkedin </v-icon>
+                </v-btn>
+              </template>
+              <span> Linkedin </span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn fab elevation="2" class="primary" v-on="on" href="https://github.com/cloppingemu">
+                  <v-icon> mdi-github </v-icon>
+                </v-btn>
+              </template>
+              <span> Github </span>
+            </v-tooltip>
+            <v-menu
+              :close-on-content-click="false"
+              v-model="email_menu"
+              :disabled="!email_fetched"
+            >
+              <template v-slot:activator="{ on:menu }">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on:tooltip }">
+                    <v-btn fab elevation="2" class="primary" v-on="{...menu, ...tooltip}" @click="start_email_fetch()" id="profile_email_fab" :loading="loading_email">
+                      <v-icon> {{email_icon}} </v-icon>
+                    </v-btn>
+                  </template>
+                  <span> {{ email_tooltip }} </span>
+                </v-tooltip>
+              </template>
+              <v-card>
+                <v-card-text>
+                  <v-text-field
+                    readonly rounded
+                    id="copier" v-model="email_address"
+                    @click="copy_email_address(false)"
+                  >
+                    <template v-slot:append>
+                      <v-tooltip bottom :close-delay="email_clipboard_close_delay">
+                        <template v-slot:activator="{ on }">
+                            <v-icon v-on="on" @click="copy_email_address(true)">
+                              {{ copy_icon }}
+                            </v-icon>
+                        </template>
+                        <span>{{ copy_tooltip }}</span>
+                      </v-tooltip>
+                    </template>
+                  </v-text-field>
+                </v-card-text>
+              </v-card>
+            </v-menu>
+          </v-layout></v-flex></v-container>
+        </v-card>
+      </v-tab-item>
+      <v-tab-item>
+        <v-card flat tile>
+          <!-- <v-card-text> -->
+            <v-expansion-panels hover accordion style="width:100%;">
+              <v-expansion-panel>
+                <v-expansion-panel-header><span class="subtitle-1 font-weight-bold">VueJS/Firebase Scrabble app</span></v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-card-text>
+                    <p>Online multi-player Scrabble web-app. Implemented using the web-development framework Vue.js, the CSS framework Vuetify and Google Firebase for a minimal backend to save game states and host the application.</p>
+                    <p>App is hosted at <a href="https://scromble.web.app">scromble.web.app</a>. Use board-name, player-name and player-key <em>demo</em> for <a href="https://scromble.web.app/game?b=demo">demonstration purposes</a>. Source available at <a href="https://github.com/cloppingemu/Scromble">github.com/cloppingemu/Scromble</a>.</p>
+                  </v-card-text>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel>
+                <v-expansion-panel-header><span class="subtitle-1 font-weight-bold"> VueJS/Firebase Preferential-Voting app</span></v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-card-text>
+                    <p>Simple web-app for hosting an anonymous preferential-voting election. This web-app uses the web-development framework Vue.js, Google Firebase to host the application and store election state and <a href="https://prfound.org/resources/reference/reference-meek-rule/">Meeks method</a> to evluate election results.</p>
+                    <p>App is hosted at <a href="http://vote-1-for-soni.web.app">vote-1-for-soni.web.app</a>. Enter with codeword <em>demo</em> for demonstration purposes. Admin console can be accessed by signing in (with Google) and requesting access. Source availabe at <a href="https://github.com/cloppingemu/vote-1-for-soni">github.com/cloppingemu/vote-1-for-soni</a>.</p>
+                  </v-card-text>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel>
+                <v-expansion-panel-header><span class="subtitle-1 font-weight-bold">Python/Flask Preferential-Voting app</span></v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-card-text>
+                    <p>Basic Python/Flask web-app for hosting an anonymous preferential-voting election. This web-app is implemented purely in HTML and CSS without any JavaScript web-development framework. Randomly assigned single-use tokens are used to register ballots anonymously.</p>
+                    <p>App is hosted at <a href="http://cloppingemu.pythonanywhere.com">cloppingemu.pythonanywhere.com</a>. Source available at <a href="https://github.com/cloppingemu/online_voting_app">github.com/cloppingemu/online_voting_app</a>.</p>
+                  </v-card-text>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel>
+                <v-expansion-panel-header><span class="subtitle-1 font-weight-bold">Evaluting Slepian Functions <span class="font-weight-regular">(publication)</span></span></v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-card-text>
+                    <p>Slepian functions are a set of orthonormal time-limited functions that are optimally concentrated in spectral-domain. In this work, a method for the derivation of Slepian functions on continuous and disjoint intervals on the real number line was propsed. The proposed method uses Fourier series to obtain a closed-form approximation for Slepian functions on the real line. With this closed-form expression, Slepian functions can be evaluated at arbitrary points in the region of interest with high accuracy.</p>
+                    <p>Full-text available at <a href="https://ieeexplore.ieee.org/document/8631753">ieeexplore.ieee.org/document/8631753</a>.</p>
+                  </v-card-text>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          <!-- </v-card-text> -->
+        </v-card>
+      </v-tab-item>
+      <v-tab-item>
+        <v-card flat tile>
+          <v-expansion-panels flat multiple accordion>
+            <v-expansion-panel>
+              <v-expansion-panel-header class="default-pointer">
+                <v-row>
+                  <v-col>
+                    <span class="subtitle-1 font-weight-bold">DSP Software Intern</span><br />Dolby Laboratories
+                  </v-col>
+                  <v-col align="right" align-self="end">
+                    <span class="body-2">Sydney, NSW<br />Dec 2019 - Feb 2020</span>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text>
+                  <ul>
+                    <li>Developing an audio-processing solution for selective spatial audio capture.</li>
+                    <li>Developing a testing metric and methodology to compare the performance of selective spatial audio capture solutions.</li>
+                    <li>Working on an IP disclosure for the implemented solution. Resulting work has been filed for patent with the US Patent Office.</li>
+                  </ul>
+                </v-card-text>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header class="default-pointer">
+                <v-row>
+                  <v-col>
+                    <span class="subtitle-1 font-weight-bold">Data Science Intern</span><br />Munich RE
+                  </v-col>
+                  <v-col align="right" align-self="end">
+                    <span class="body-2">Sydney, NSW<br />Dec 2018 - Feb 2019</span>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text>
+                  <ul>
+                    <li>Predicting severity of weather events based on historical catalogue of severe weathers and data from the Bureau of Meteorology and the Insurance Council of Australia.</li>
+                    <li>Data analysis was undertaken using Python, predominantly using the Python library Pandas, Scikit-Learn and NLTK. Online data sources were scraped using Python library Requests.</li>
+                  </ul>
+                </v-card-text>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header class="default-pointer">
+                <v-row>
+                  <v-col>
+                    <span class="subtitle-1 font-weight-bold" align-self="end">Summer Research Scholar</span><br />The Australian National University
+                  </v-col>
+                  <v-col align="right" align-self="end">
+                    <span class="body-2">Canberra, ACT<br />Dec 2017 - Feb 2018</span>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text>
+                  <ul>
+                    <li>Working on approximating Slepian function — spatio-spectral concentration optimization problem — on the real line.</li>
+                    <li>Research work was undertaken predominantly using Python scientific libraries — <em>Numpy</em> and <em>Scipy</em>.</li>
+                    <li>Presented the resulting research paper at the 12th International Conference on Signal Processing and Communication Systems 2018, Cairns Qld.</li>
+                  </ul>
+                </v-card-text>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header class="default-pointer">
+                <v-row>
+                  <v-col>
+                    <span class="subtitle-1 font-weight-bold" align-self="end">Data Science Intern</span><br />Ekistica Pty. Ltd.
+                  </v-col>
+                  <v-col align="right" align-self="end">
+                    <span class="body-2">Alice Springs, NT<br />Dec 2016 - Feb 2017<br />June 2017 - July 2017</span>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text>
+                  <ul>
+                    <li>Using large data-set to model the change in the output solar panels over time.</li>
+                    <li>Modelling financial viability of solar panel installations.</li>
+                    <li>All work was undertaken using Python, predominantly using the Python library Pandas and Scikit-Learn.</li>
+                  </ul>
+                </v-card-text>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header class="default-pointer">
+                <v-row>
+                  <v-col>
+                    <span class="subtitle-1 font-weight-bold" align-self="end">Laboratory Technician</span><br />OLSH College
+                  </v-col>
+                  <v-col align="right" align-self="end">
+                    <span class="body-2">Alice Springs, NT<br />Jan 2014 - Dec 2014</span>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text>
+                  <ul>
+                    <li>Preparing equipment, chemicals and other materials for science experiments and demonstrations.</li>
+                    <li>Assisting teaching staff in overseeing science experiments and demonstrations.</li>
+                    <li>Assisting teaching staff with teaching during classes.</li>
+                  </ul>
+                </v-card-text>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
+      </v-tab-item>
+      <v-tab-item>
+        <v-card flat tile>
+          <v-card-text style="color:#272727">
+            <v-simple-table>
+              <template>
+              <tbody>
+                <tr class="expandTable">
+                  <td class="body-1">MATLAB, Python</td>
+                  <td class="body-2" style="padding-bottom: 5pt;"><b>Expert</b>. Extensive experience with MATLAB and Python for numerical and scientific work. Particularly, with the Python's scientific &amp; statistical libraries.<br />Also proficient with Python web-development framework, Flask.</td>
+                </tr>
+                <tr class="expandTable">
+                  <td class="body-1">LaTeX, JavaScript, TypeScript, R, Verilog</td>
+                  <td class="body-2" style="padding-top: 5pt; padding-bottom: 5pt;"><b>Proficient</b>. I have previously worked with FPGAs using Verilog as a part of coursework. I have also used LaTeX and R as a part of coursework. <br />I have used JavaScript as part of personal web-development projects. I am proficient with the JavaScript web-development framework VueJS.</td>
+                </tr>
+                <tr class="expandTable">
+                  <td class="body-1">C, VBA, SQL</td>
+                  <td class="body-2" style="padding-top: 5pt;"><b>Familiar</b>. I have formerly used C, VBA and SQL as a part of my coursework and employment.</td>
+                </tr>
+              </tbody>
+              </template>
+            </v-simple-table>
+            <ul class="skillsList">
+              <li>Experienced with data-analysis methods from my former research projects and employments. I have previously worked with both, structured and unstructured data.</li>
+              <li>Experienced with machine learning techniques from my internships and research projects.</li>
+              <li>Experienced with signal-processing methods from my former research projects and employments. I have previously worked with both, signals defined on the real number line and on the sphere.</li>
+              <li>Experienced with Windows and GNU/Linux based operating systems.</li>
+              <li>High level of proficiency in Microsoft-Office suite.</li>
+            </ul>
+          </v-card-text>
+        </v-card>
+      </v-tab-item>
+    </v-tabs-items>
+  </v-flex>
+  </v-layout>
+  
+  <v-layout justify-center>
+  <v-card v-if="showing_voight_kampff">
+    <v-toolbar dark flat tile>
+      <h1>Voight-Kampff</h1>
+      <v-spacer />
+      <sup><v-btn icon x-small right class="ml-5" @click="showing_voight_kampff = false"><v-icon>mdi-close-circle-outline</v-icon></v-btn></sup>
+    </v-toolbar>
+    <v-container>
+          <v-text-field
+            label="Are you a human?"
+            id="voight_kampff" clearable
+            @keydown.enter="get_email_address()"
+            persistent-hint hint="Please answer honestly"
+          >
+          </v-text-field>
+          <v-text-field
+            label="E-mail" id="email"
+            style="display:none;"
+          ></v-text-field>
+          <v-btn
+            block right text
+            @click="get_email_address()"
+          >
+            Get address
+          </v-btn>
+    </v-container>
+  </v-card>
+  </v-layout>
+  </v-container>
+  
+  </v-content>
+  </v-app>    
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.1"></script>
+<script src="./app.js"></script>
+
+</body>
+</html>
